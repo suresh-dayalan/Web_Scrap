@@ -1,0 +1,106 @@
+# coding: utf-8
+from selenium import webdriver
+import time
+import re
+
+driver =r"C:\Users\praba\Documents\conda_workspace\selenium_code\chromedriver_win32\chromedriver.exe".replace("\\","/")
+
+# set webdriver path here it may vary 
+brower = webdriver.Chrome(executable_path =driver) 
+
+website_URL ="https://maharerait.mahaonline.gov.in/Login/Login"
+brower.get(website_URL) 
+
+brower.find_element_by_xpath('//*[@id="TheForm"]/div[1]/div[3]/div/div/div[2]/div[2]/a').click() 
+time.sleep(1)
+brower.find_element_by_xpath('//*[@id="Promoter"]').click()
+time.sleep(1)
+brower.find_element_by_xpath('//*[@id="btnAdvance"]').click()
+time.sleep(1)
+brower.find_element_by_xpath('//*[@id="State"]/option[4]').click()
+time.sleep(2)
+brower.find_element_by_xpath('//*[@id="District"]/option[2]').click()
+time.sleep(2)
+brower.find_element_by_xpath('//*[@id="btnSearch"]').click()
+time.sleep(2)
+with open('page_data10.html', 'w') as f:
+    f.write(brower.page_source)
+
+page = brower.page_source
+
+blocks = re.findall("(<tr\s*class=\"grid-row\s*\">[\w\W]*?<\/tr>)",page)
+
+
+# In[110]:
+
+
+len(blocks)
+
+
+# In[111]:
+
+
+import requests
+import time
+
+first_name_rx = '<label\s*for\=\"PersonalInfoModel_IndivisualName\">([^>]*?)<\/label>[^>]*?</div>[^>]*?<div[^>]*?>\s*([^>]*?)\s*<'
+full_father_name_rx = '<label\s*for\=\"PersonalInfoModel_IndivisualFatherName\">([^>]*?)<\/label>[^>]*?</div>[^>]*?<div[^>]*?>\s*([^>]*?)\s*<'
+
+
+def clean_html(data):
+    data = re.sub(r'\s+'," ",data)
+    return data
+
+def file_writer(filename,res_object):
+    with open(filename,"wb")as f:
+        f.write(res_object.content)
+        
+        
+def get_data(regex,content):
+    result = re.findall(regex,str(content))
+    if result:
+        result = result[0]
+        return result[0],clean_html(result[1])
+    else:
+        print("Data NOt AVAILABLE")
+
+headers = {
+    'Connection': 'keep-alive',
+    'Host': 'maharerait.mahaonline.gov.in',
+    'referer':'https://maharerait.mahaonline.gov.in/SearchList/Search',
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'X-Requested-With': 'XMLHttpRequest',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-User':'?1',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Origin': 'https://maharerait.mahaonline.gov.in'
+}
+         
+for i,block in enumerate(blocks):
+    block_data_rx = '<td[^>]*?>([\w\W]*?)<\/td>'
+    block_data = re.findall(block_data_rx,block)
+    print(i,block_data[0],block_data[1],block_data[2],block_data[3])
+
+    view_url = re.findall('<a\s*href\=\"([^>]*?)\"',block_data[4])[0]
+    
+    base_url = 'https://maharerait.mahaonline.gov.in'+view_url
+    print(base_url)
+    
+#     brower.get(website_URL) 
+    res = requests.get(base_url,headers=headers)
+    print("Response:",res.status_code)
+    file_writer(str(i)+"_page.html",res)
+    content = res.content
+#     content = brower.page_source
+    
+    print(get_data(first_name_rx,content))
+    time.sleep(3)
+
+
+
+
