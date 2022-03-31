@@ -6,7 +6,7 @@ import re
 driver =r"C:\Users\praba\Documents\conda_workspace\selenium_code\chromedriver_win32\chromedriver.exe".replace("\\","/")
 
 # set webdriver path here it may vary 
-brower = webdriver.Chrome(executable_path =driver) 
+brower = webdriver.Chrome(executable_path =driver)
 
 website_URL ="https://maharerait.mahaonline.gov.in/Login/Login"
 brower.get(website_URL) 
