@@ -99,7 +99,7 @@ for i,block in enumerate(blocks):
 #     content = brower.page_source
     
     print(get_data(first_name_rx,content))
-    time.sleep(3)
+    time.sleep(4)
 
 
 
