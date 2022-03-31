@@ -89,7 +89,7 @@ for i,block in enumerate(blocks):
     view_url = re.findall('<a\s*href\=\"([^>]*?)\"',block_data[4])[0]
     
     base_url = 'https://maharerait.mahaonline.gov.in'+view_url
-
+    print(base_url)
     
 #     brower.get(website_URL) 
     res = requests.get(base_url,headers=headers)
