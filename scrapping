@@ -8,8 +8,8 @@ driver =r"C:\Users\praba\Documents\conda_workspace\selenium_code\chromedriver_wi
 # set webdriver path here it may vary 
 brower = webdriver.Chrome(executable_path =driver)
 
-website_URL ="https://maharerait.mahaonline.gov.in/Login/Login"
-brower.get(website_URL) 
+website_URL_test ="https://maharerait.mahaonline.gov.in/Login/Login"
+brower.get(website_URL_test) 
 
 brower.find_element_by_xpath('//*[@id="TheForm"]/div[1]/div[3]/div/div/div[2]/div[2]/a').click() 
 time.sleep(1)
