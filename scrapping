@@ -101,6 +101,11 @@ for i,block in enumerate(blocks):
     print(get_data(first_name_rx,content))
     time.sleep(4)
 
+    print(get_data(first_name_rx,content))
+    time.sleep(7)
+    print(get_data(first_name_rx,content))
+    time.sleep(10)
+
 
 
 
